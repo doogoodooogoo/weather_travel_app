@@ -2,43 +2,44 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [weatherList, setWeatherList] = useState<any[]>([]);
-
   const cities = ["Tokyo", "Osaka", "Fukuoka"];
-
   const API_KEY = import.meta.env.VITE_API_KEY;
 
-  // Travel score
   const getTravelScore = (weather: any) => {
     let score = 0;
-
     const condition = weather.weather[0].main;
     const temp = weather.main.temp;
-
     if (condition === "Clear") score += 40;
     else if (condition === "Clouds") score += 10;
     else if (condition === "Rain") score -= 30;
-
     if (temp >= 15 && temp <= 25) score += 30;
     else score -= 20;
-
     return score;
   };
 
-  // rating
   const getMessage = (score: number) => {
-    if (score >= 60) return "여행하기 최고 👍";
-    if (score >= 30) return "무난 👍";
-    return "오늘은 비추천 😢";
+    if (score >= 60) return "여행하기 최고";
+    if (score >= 30) return "무난한 날씨";
+    return "오늘은 비추천";
   };
 
-  // rating deco
   const getScoreColor = (score: number) => {
     if (score >= 60) return "text-green-500";
     if (score >= 30) return "text-yellow-500";
     return "text-red-500";
   };
 
-  // data fetch
+  const getBarColor = (score: number) => {
+    if (score >= 60) return "bg-green-500";
+    if (score >= 30) return "bg-yellow-400";
+    return "bg-red-400";
+  };
+
+  const getBarWidth = (score: number) => {
+    const min = -60, max = 100;
+    return Math.max(0, Math.round(((score - min) / (max - min)) * 100));
+  };
+
   useEffect(() => {
     const fetchWeather = async () => {
       const results = await Promise.all(
@@ -48,67 +49,94 @@ function App() {
           ).then((res) => res.json())
         )
       );
-
       setWeatherList(results);
     };
-
     fetchWeather();
   }, []);
 
-  // best city
   const bestCity =
     weatherList.length > 0
-      ? [...weatherList].sort(
-          (a, b) => getTravelScore(b) - getTravelScore(a)
-        )[0]
+      ? [...weatherList].sort((a, b) => getTravelScore(b) - getTravelScore(a))[0]
       : null;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">
-        🇯🇵 Japan Travel Weather
-      </h1>
-
-      
-      {bestCity && (
-        <div className="bg-green-100 p-4 rounded-xl mb-6 text-center">
-          <h2 className="text-lg font-semibold">
-            오늘의 추천 도시: {bestCity.name} 🌟
-          </h2>
+      <div className="max-w-3xl mx-auto">
+        {/* 헤더 */}
+        <div className="mb-5">
+          <h1 className="text-2xl font-bold text-gray-800">🇯🇵 Japan Travel Weather</h1>
+          <p className="text-sm text-gray-400 mt-1">도쿄 · 오사카 · 후쿠오카 · 오늘 기준</p>
         </div>
-      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {weatherList.map((w, index) => {
-          const score = getTravelScore(w);
-          const message = getMessage(score);
+        {/* 추천 배너 */}
+        {bestCity && (
+          <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-5">
+            <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+            <p className="text-sm font-medium text-green-700">
+              오늘 추천 도시: {bestCity.name} — {getMessage(getTravelScore(bestCity))}
+            </p>
+          </div>
+        )}
 
-          return (
-            <div
-              key={index}
-              className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-xl transition"
-            >
-              <h2 className="text-xl font-semibold mb-2">{w.name}</h2>
+        {/* 카드 그리드 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {weatherList.map((w, index) => {
+            const score = getTravelScore(w);
+            const isBest = bestCity?.name === w.name;
 
-              <img
-                className="mx-auto"
-                src={`https://openweathermap.org/img/wn/${w.weather[0].icon}@2x.png`}
-                alt="weather icon"
-              />
-
-              <p className="text-lg">{w.main.temp}°C</p>
-              <p className="text-gray-500">{w.weather[0].main}</p>
-
-              <p
-                className={`mt-3 text-2xl font-bold ${getScoreColor(score)}`}
+            return (
+              <div
+                key={index}
+                className={`bg-white rounded-2xl p-5 transition ${
+                  isBest
+                    ? "ring-2 ring-green-400 shadow-md"
+                    : "border border-gray-100 shadow-sm hover:shadow-md"
+                }`}
               >
-                {score}점
-              </p>
+                {/* 도시명 + 날씨 상태 배지 */}
+                <div className="flex items-start justify-between mb-3">
+                  <h2 className="text-base font-semibold text-gray-800">{w.name}</h2>
+                  <span className="text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5">
+                    {w.weather[0].main}
+                  </span>
+                </div>
 
-              <p className="mt-1 text-sm text-blue-500">{message}</p>
-            </div>
-          );
-        })}
+                {/* 아이콘 + 온도 한 줄 */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="bg-gray-50 rounded-xl p-1">
+                    <img
+                      src={`https://openweathermap.org/img/wn/${w.weather[0].icon}@2x.png`}
+                      alt="weather icon"
+                      className="w-10 h-10"
+                    />
+                  </div>
+                  <span className="text-3xl font-semibold text-gray-800">
+                    {Math.round(w.main.temp)}
+                    <span className="text-base font-normal text-gray-400">°C</span>
+                  </span>
+                </div>
+
+                {/* 구분선 */}
+                <div className="border-t border-gray-100 mb-3" />
+
+                {/* 점수 바 */}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${getBarColor(score)}`}
+                      style={{ width: `${getBarWidth(score)}%` }}
+                    />
+                  </div>
+                  <span className={`text-sm font-bold ${getScoreColor(score)} min-w-[40px] text-right`}>
+                    {score}점
+                  </span>
+                </div>
+
+                <p className="text-xs text-gray-400">{getMessage(score)}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
