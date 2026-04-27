@@ -59,12 +59,12 @@ function App() {
       ? [...weatherList].sort((a, b) => getTravelScore(b) - getTravelScore(a))[0]
       : null;
 
-  return (
+  return (    
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-3xl mx-auto">
         {/* 헤더 */}
         <div className="mb-5">
-          <h1 className="text-2xl font-bold text-gray-800">🇯🇵 Japan Travel Weather</h1>
+          <h1 className="text-2xl font-bold text-gray-800">🇯🇵🎌 Japan Travel Weather</h1>
           <p className="text-sm text-gray-400 mt-1">도쿄 · 오사카 · 후쿠오카 · 오늘 기준</p>
         </div>
 
