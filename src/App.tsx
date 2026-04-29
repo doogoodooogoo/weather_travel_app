@@ -32,7 +32,7 @@ const attractions: Record<string, { name: string; image: string; desc: string }[
     },
     {
       name: "유니버설 스튜디오 재팬",
-      image: "jhttps://images.unsplash.com/photo-1617394079085-f4acc39a7d2a?w=480&q=80",
+      image: "https://images.unsplash.com/photo-1617394079085-f4acc39a7d2a?w=480&q=80",
       desc: "오사카 대표 테마파크",
     },
   ],
