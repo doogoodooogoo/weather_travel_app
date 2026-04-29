@@ -22,12 +22,12 @@ const attractions: Record<string, { name: string; image: string; desc: string }[
   Osaka: [
     {
       name: "오사카성",
-      image: "https://images.unsplash.com/photo-1590559899731-a382839e5549?w=480&q=80",
+      image: "https://images.unsplash.com/photo-1626382591601-f37a1a2a9780?w=480&q=80",
       desc: "16세기 지어진 오사카의 상징",
     },
     {
       name: "도톤보리",
-      image: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=480&q=80",
+      image: "https://images.unsplash.com/photo-1565559204102-f59129a70ae2?w=480&q=80",
       desc: "오사카 최대 번화가 & 맛집 거리",
     },
     {
@@ -44,12 +44,12 @@ const attractions: Record<string, { name: string; image: string; desc: string }[
     },
     {
       name: "나카스 포장마차 거리",
-      image: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=480&q=80",
+      image: "https://images.unsplash.com/photo-1709384079027-8e0a44cafe3d?w=480&q=80",
       desc: "후쿠오카 명물 야외 포장마차",
     },
     {
       name: "후쿠오카성 터",
-      image: "https://images.unsplash.com/photo-1533050487297-09b450131914?w=480&q=80",
+      image: "https://images.unsplash.com/photo-1573045736454-1abc56c6571d?w=480&q=80",
       desc: "벚꽃 명소로 유명한 성터 공원",
     },
   ],
